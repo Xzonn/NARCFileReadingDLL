@@ -13,7 +13,7 @@ namespace NARCFileReadingDLL
   public class FATBFrame : NARCFileFrame
   {
     public const string MAGIC = "FATB";
-    private List<FileAllocationTableEntry> m_lstfateEntries;
+    private readonly List<FileAllocationTableEntry> m_lstfateEntries;
 
     public FATBFrame(BinaryReader brrReader, int nSize, params object[] args)
     {

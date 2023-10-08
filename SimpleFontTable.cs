@@ -20,7 +20,7 @@ namespace NARCFileReadingDLL
     private byte m_bHeight;
     private byte m_bBitsPerPixel;
     private byte m_bOrientation;
-    private List<FontTableItem> m_lstftiItems = new List<FontTableItem>();
+    private readonly List<FontTableItem> m_lstftiItems = new List<FontTableItem>();
 
     public SimpleFontTable(BinaryReader brrReader)
     {
@@ -85,17 +85,24 @@ namespace NARCFileReadingDLL
 
     public override void WriteTo(BinaryWriter brwWriter)
     {
+      int maxCharCount = m_lstftiItems.Count > 0x200 ? 0x200 : m_lstftiItems.Count;
       brwWriter.Write(m_nHeaderSize);
       brwWriter.Write(m_nTableSize);
-      brwWriter.Write(m_nItemsCount);
+      brwWriter.Write(maxCharCount);
       brwWriter.Write(m_bMaxWidth);
       brwWriter.Write(m_bHeight);
       brwWriter.Write(m_bBitsPerPixel);
       brwWriter.Write(m_bOrientation);
       foreach (FontTableItem lstftiItem in m_lstftiItems)
         lstftiItem.WriteTo(brwWriter);
-      foreach (FontTableItem lstftiItem in m_lstftiItems)
-        lstftiItem.WriteWidthTo(brwWriter);
+      int TableSize = (int)brwWriter.BaseStream.Position;
+      for (int pos = 0; pos < maxCharCount; pos++)
+      {
+        m_lstftiItems[pos].WriteWidthTo(brwWriter);
+      }
+      brwWriter.Write(new byte[] { 255, 255, 255 });
+      brwWriter.BaseStream.Position = 4;
+      brwWriter.Write(TableSize);
     }
 
     public void AddNewItem()

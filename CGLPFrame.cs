@@ -116,9 +116,9 @@ namespace NARCFileReadingDLL
       private byte m_bySpaceWidth;
       private byte m_byWidth;
       private byte m_byUnknown;
-      private byte m_byMaxWidth;
-      private byte m_byMaxHeight;
-      private byte m_byBPP;
+      private readonly byte m_byMaxWidth;
+      private readonly byte m_byMaxHeight;
+      private readonly byte m_byBPP;
 
       public Character(byte byMaxWidth, byte byMaxHeight, byte byBPP)
       {
@@ -186,8 +186,21 @@ namespace NARCFileReadingDLL
           if (value == null)
             throw new FormatException();
           if (value.GetLength(0) != m_byMaxHeight || value.GetLength(1) != m_byMaxWidth)
-            throw new FormatException();
-          m_arrvValues = value;
+          {
+            VALUE[,] temp = new VALUE[m_byMaxHeight, m_byMaxWidth];
+            for (int i = 0; i < value.GetLength(0) && i < m_byMaxHeight; i++)
+            {
+              for (int j = 0; j < value.GetLength(1) && j < m_byMaxWidth; j++)
+              {
+                temp[i, j] = value[i, j];
+              }
+            }
+            m_arrvValues = temp;
+          }
+          else
+          {
+            m_arrvValues = value;
+          }
         }
       }
 

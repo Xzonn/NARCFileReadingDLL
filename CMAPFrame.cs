@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace NARCFileReadingDLL
 {
@@ -65,7 +66,14 @@ namespace NARCFileReadingDLL
     {
       get
       {
-        return m_dicushushIndexes[cValue];
+        if (m_dicushushIndexes.ContainsKey(cValue))
+        {
+          return m_dicushushIndexes[cValue];
+        }
+        else
+        {
+          return 0;
+        }
       }
       set
       {
@@ -81,6 +89,29 @@ namespace NARCFileReadingDLL
             return;
           m_dicushushIndexes[cValue] = value;
         }
+      }
+    }
+
+    public char this[ushort cIndex]
+    {
+      get
+      {
+        if (m_dicushushIndexes.ContainsValue(cIndex))
+        {
+          return m_dicushushIndexes.First(x => x.Value == cIndex).Key;
+        }
+        else
+        {
+          return '\0';
+        }
+      }
+      set
+      {
+        if (m_dicushushIndexes.ContainsValue(cIndex))
+        {
+          m_dicushushIndexes.Remove(m_dicushushIndexes.First(x => x.Value == cIndex).Key);
+        }
+        m_dicushushIndexes[value] = cIndex;
       }
     }
 
@@ -232,6 +263,22 @@ namespace NARCFileReadingDLL
       {
         nextCmapFrameIndex += (uint)nftrNitro.Frames[index2].Size;
         ((CMAPFrame)nftrNitro.Frames[index2]).m_unNextCMAPFrameIndex = nextCmapFrameIndex;
+      }
+    }
+
+    public char[] Keys
+    {
+      get
+      {
+        return m_dicushushIndexes.Keys.ToArray();
+      }
+    }
+
+    public ushort[] Values
+    {
+      get
+      {
+        return m_dicushushIndexes.Values.ToArray();
       }
     }
   }

@@ -12,14 +12,14 @@ namespace NARCFileReadingDLL
 {
   public class NARCFile : INintendoItem
   {
-    private string m_strMagic;
-    private short m_shBom;
-    private short m_shUnknown1;
-    private short m_shUnknown2;
-    private short m_shFramesCount;
-    private FATBFrame m_fatfFATB;
-    private FNTBFrame m_fntfFNTB;
-    private FIMGFrame m_fimgfFIMG;
+    private readonly string m_strMagic;
+    private readonly short m_shBom;
+    private readonly short m_shUnknown1;
+    private readonly short m_shUnknown2;
+    private readonly short m_shFramesCount;
+    private readonly FATBFrame m_fatfFATB;
+    private readonly FNTBFrame m_fntfFNTB;
+    private readonly FIMGFrame m_fimgfFIMG;
 
     public NARCFile(BinaryReader brrReader)
     {
@@ -58,8 +58,10 @@ namespace NARCFileReadingDLL
       m_fatfFATB = (FATBFrame)NARCFileFrame.ReadFrom(brrReader, null);
       m_fntfFNTB = (FNTBFrame)NARCFileFrame.ReadFrom(brrReader, null);
       m_fimgfFIMG = (FIMGFrame)NARCFileFrame.ReadFrom(brrReader, m_fatfFATB);
+      /*
       if (brrReader.BaseStream.Position != brrReader.BaseStream.Length)
         throw new FormatException();
+      */
     }
 
     public int Size

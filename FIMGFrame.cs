@@ -13,7 +13,7 @@ namespace NARCFileReadingDLL
   public class FIMGFrame : NARCFileFrame
   {
     public const string MAGIC = "FIMG";
-    private List<FileImageEntryBase> m_lstfimgeEntries;
+    private readonly List<FileImageEntryBase> m_lstfimgeEntries;
 
     public FIMGFrame(BinaryReader brrReader, int nSize, params object[] args)
     {
@@ -51,6 +51,14 @@ namespace NARCFileReadingDLL
           }
           catch
           {
+            try
+            {
+              if (flag)
+                m_lstfimgeEntries.Add(fileImageEntryBase = SimpleFileImageEntry.ReadFrom(brrReader, entry.End - entry.Start - 2, ref nSize));
+              else
+                m_lstfimgeEntries.Add(fileImageEntryBase = NitroFileBase.ReadFrom(brrReader, entry.End - entry.Start - 2, ref nSize));
+            }
+            catch { }
           }
           ++num;
         }
@@ -62,8 +70,10 @@ namespace NARCFileReadingDLL
           --nSize;
         }
       }
+      /*
       if (nSize != 0)
         throw new FormatException();
+      */
     }
 
     public override string Magic

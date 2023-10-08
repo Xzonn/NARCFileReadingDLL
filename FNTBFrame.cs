@@ -13,10 +13,10 @@ namespace NARCFileReadingDLL
   public class FNTBFrame : NARCFileFrame
   {
     public const string MAGIC = "FNTB";
-    private int m_nDirectoryStart;
-    private short m_sFirstFile;
-    private short m_sDirectoryCount;
-    private List<FileNameTableEntry> m_lstfntbeEntries;
+    private readonly int m_nDirectoryStart;
+    private readonly short m_sFirstFile;
+    private readonly short m_sDirectoryCount;
+    private readonly List<FileNameTableEntry> m_lstfntbeEntries;
 
     public FNTBFrame(BinaryReader brrReader, int nSize, params object[] args)
     {

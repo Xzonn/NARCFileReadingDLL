@@ -11,7 +11,7 @@ namespace NARCFileReadingDLL
 {
   public class FontTableItem : IFontTableItem
   {
-    private Pallete[,] m_arrpltParts;
+    private readonly Pallete[,] m_arrpltParts;
     private byte m_bWidth;
 
     public FontTableItem()
@@ -118,7 +118,7 @@ namespace NARCFileReadingDLL
 
     private class Pallete
     {
-      private VALUE[,] m_arrvValues;
+      private readonly VALUE[,] m_arrvValues;
 
       public Pallete()
       {

@@ -232,8 +232,8 @@ namespace NARCFileReadingDLL
 
     private struct BinaryString
     {
-      private string m_strBinary;
-      private string m_strString;
+      private readonly string m_strBinary;
+      private readonly string m_strString;
 
       public BinaryString(string strBinary, string strString)
       {
