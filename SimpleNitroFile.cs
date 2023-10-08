@@ -39,7 +39,7 @@ namespace NARCFileReadingDLL
           if (ch < 'A' || ch > 'Z')
             throw new FormatException();
         }
-                m_strMagic = value;
+        m_strMagic = value;
       }
     }
   }

@@ -16,7 +16,7 @@ namespace NARCFileReadingDLL
     private int m_nDirectoryStart;
     private short m_sFirstFile;
     private short m_sDirectoryCount;
-    private List<FNTBFrame.FileNameTableEntry> m_lstfntbeEntries;
+    private List<FileNameTableEntry> m_lstfntbeEntries;
 
     public FNTBFrame(BinaryReader brrReader, int nSize, params object[] args)
     {
@@ -24,24 +24,24 @@ namespace NARCFileReadingDLL
         throw new FormatException();
       if (nSize < 8)
         throw new FormatException();
-            m_nDirectoryStart = brrReader.ReadInt32();
+      m_nDirectoryStart = brrReader.ReadInt32();
       nSize -= 4;
-            m_sFirstFile = brrReader.ReadInt16();
+      m_sFirstFile = brrReader.ReadInt16();
       nSize -= 2;
-            m_sDirectoryCount = brrReader.ReadInt16();
+      m_sDirectoryCount = brrReader.ReadInt16();
       nSize -= 2;
       switch (m_nDirectoryStart)
       {
         case 4:
           if (nSize > 0)
             throw new FormatException();
-                    m_lstfntbeEntries = (List<FNTBFrame.FileNameTableEntry>) null;
+          m_lstfntbeEntries = null;
           break;
         case 8:
           while (nSize > 0)
           {
-                        m_lstfntbeEntries = new List<FNTBFrame.FileNameTableEntry>();
-                        m_lstfntbeEntries.Add(new FNTBFrame.FileNameTableEntry(brrReader, ref nSize));
+            m_lstfntbeEntries = new List<FileNameTableEntry>();
+            m_lstfntbeEntries.Add(new FileNameTableEntry(brrReader, ref nSize));
           }
           break;
         default:
@@ -64,7 +64,7 @@ namespace NARCFileReadingDLL
         int num = 8;
         if (m_nDirectoryStart == 8)
         {
-          foreach (FNTBFrame.FileNameTableEntry lstfntbeEntry in m_lstfntbeEntries)
+          foreach (FileNameTableEntry lstfntbeEntry in m_lstfntbeEntries)
             num += lstfntbeEntry.Size;
         }
         return num;
@@ -79,7 +79,7 @@ namespace NARCFileReadingDLL
       }
     }
 
-    public FNTBFrame.FileNameTableEntry[] Entries
+    public FileNameTableEntry[] Entries
     {
       get
       {
@@ -94,7 +94,7 @@ namespace NARCFileReadingDLL
       brwWriter.Write(m_sDirectoryCount);
       if (m_nDirectoryStart != 8)
         return;
-      foreach (FNTBFrame.FileNameTableEntry lstfntbeEntry in m_lstfntbeEntries)
+      foreach (FileNameTableEntry lstfntbeEntry in m_lstfntbeEntries)
         lstfntbeEntry.WriteTo(brwWriter);
     }
 
@@ -106,10 +106,10 @@ namespace NARCFileReadingDLL
       {
         byte num = brrReader.ReadByte();
         --nMaxSize;
-        if ((int) num > nMaxSize)
+        if (num > nMaxSize)
           throw new FormatException();
-                m_strFileName = new string(brrReader.ReadChars((int) num));
-        nMaxSize -= (int) num;
+        m_strFileName = new string(brrReader.ReadChars(num));
+        nMaxSize -= num;
       }
 
       public int Size
@@ -130,9 +130,9 @@ namespace NARCFileReadingDLL
         {
           if (value == null)
             throw new FormatException();
-          if (value.Length > (int) byte.MaxValue)
+          if (value.Length > byte.MaxValue)
             throw new FormatException();
-                    m_strFileName = value;
+          m_strFileName = value;
         }
       }
 

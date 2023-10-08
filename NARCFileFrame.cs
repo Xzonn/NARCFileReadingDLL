@@ -34,7 +34,7 @@ namespace NARCFileReadingDLL
       int num = brrReader.ReadInt32() - 4 - 4;
       if (num < 0)
         throw new FormatException();
-      return (NARCFileFrame) Activator.CreateInstance(Type.GetType("NARCFileReadingDLL." + str + "Frame"), (object) brrReader, (object) num, (object) fatfFATB);
+      return (NARCFileFrame)Activator.CreateInstance(Type.GetType("NARCFileReadingDLL." + str + "Frame"), brrReader, num, fatfFATB);
     }
 
     protected abstract void WriteContentTo(BinaryWriter brwWriter);
@@ -43,7 +43,7 @@ namespace NARCFileReadingDLL
     {
       brwWriter.Write(Global.ReplaceOrder(Magic).ToCharArray());
       brwWriter.Write(Size);
-            WriteContentTo(brwWriter);
+      WriteContentTo(brwWriter);
     }
   }
 }

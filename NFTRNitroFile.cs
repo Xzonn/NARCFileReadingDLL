@@ -21,12 +21,12 @@ namespace NARCFileReadingDLL
     public NFTRNitroFile(BinaryReader brrReader)
       : base(brrReader)
     {
-            m_nCMAP_Type_1_FirstIndex = 3;
-      for (int index = 3; index < (int)FramesCount - 1; ++index)
+      m_nCMAP_Type_1_FirstIndex = 3;
+      for (int index = 3; index < FramesCount - 1; ++index)
       {
         if (((CMAPFrame)Frames[index]).Type == 1U)
         {
-                    m_nCMAP_Type_1_FirstIndex = index;
+          m_nCMAP_Type_1_FirstIndex = index;
           break;
         }
       }
@@ -81,16 +81,16 @@ namespace NARCFileReadingDLL
     {
       get
       {
-        for (int index = 3; index < (int)FramesCount - 1; ++index)
+        for (int index = 3; index < FramesCount - 1; ++index)
         {
           if (((CMAPFrame)Frames[index]).ContainsValue(cValue))
             return ((CMAPFrame)Frames[index])[cValue];
         }
-        return ((CMAPFrame)Frames[(int)FramesCount - 1])[cValue];
+        return ((CMAPFrame)Frames[FramesCount - 1])[cValue];
       }
       set
       {
-        for (int index = 3; index < (int)FramesCount - 1; ++index)
+        for (int index = 3; index < FramesCount - 1; ++index)
         {
           if (((CMAPFrame)Frames[index]).ContainsValue(cValue))
           {
@@ -98,16 +98,16 @@ namespace NARCFileReadingDLL
             break;
           }
         }
-        ((CMAPFrame)Frames[(int)FramesCount - 1])[cValue] = value;
+        ((CMAPFrame)Frames[FramesCount - 1])[cValue] = value;
       }
     }
 
     public void AddCMAPFrame(CMAPFrame cmapFrame)
     {
       if (cmapFrame.Type == 0U)
-                InsertFrame(m_nCMAP_Type_1_FirstIndex++, (NitroFileFrameBase) cmapFrame);
+        InsertFrame(m_nCMAP_Type_1_FirstIndex++, cmapFrame);
       else if (cmapFrame.Type == 1U)
-                InsertFrame((int)FramesCount - 1, (NitroFileFrameBase) cmapFrame);
+        InsertFrame(FramesCount - 1, cmapFrame);
       cmapFrame.UpdateFromNFTRNitroFile(this);
     }
 
@@ -116,7 +116,7 @@ namespace NARCFileReadingDLL
       ((CGLPFrame)Frames[1]).AddNewItem();
       if (m_fcFileChanged == null)
         return;
-            m_fcFileChanged((FIMGFrame.FileImageEntryBase) this);
+      m_fcFileChanged(this);
     }
   }
 }

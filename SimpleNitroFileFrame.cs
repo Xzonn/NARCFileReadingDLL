@@ -36,7 +36,7 @@ namespace NARCFileReadingDLL
           if (ch < 'A' || ch > 'Z')
             throw new FormatException();
         }
-                m_strMagic = value;
+        m_strMagic = value;
       }
     }
 
@@ -47,7 +47,7 @@ namespace NARCFileReadingDLL
 
     protected override void SetContent(byte[] arrbContent)
     {
-            m_arrbContent = arrbContent;
+      m_arrbContent = arrbContent;
     }
   }
 }

@@ -20,18 +20,18 @@ namespace NARCFileReadingDLL
 
     public ByteArrayStream()
     {
-            m_array = new List<byte[]>(0);
-            m_length = 0L;
-            m_position = 0L;
-            m_positionArrayIndex = 0;
-            m_positionByteIndex = 0;
+      m_array = new List<byte[]>(0);
+      m_length = 0L;
+      m_position = 0L;
+      m_positionArrayIndex = 0;
+      m_positionByteIndex = 0;
     }
 
     public ByteArrayStream(byte[] array)
       : this()
     {
-            m_array.Add(array);
-            m_length = (long) array.Length;
+      m_array.Add(array);
+      m_length = array.Length;
     }
 
     public override long Position
@@ -50,22 +50,22 @@ namespace NARCFileReadingDLL
           throw new ArgumentException();
         if (m_position < value)
         {
-          for (; m_position < value && m_position + (long) (m_array[m_positionArrayIndex].Length - m_positionByteIndex) <= value; m_positionByteIndex = 0)
+          for (; m_position < value && m_position + (m_array[m_positionArrayIndex].Length - m_positionByteIndex) <= value; m_positionByteIndex = 0)
           {
-                        m_position += (long) (m_array[m_positionArrayIndex].Length - m_positionByteIndex);
+            m_position += m_array[m_positionArrayIndex].Length - m_positionByteIndex;
             ++m_positionArrayIndex;
           }
         }
         else
         {
-          for (; m_position - (long)m_positionByteIndex > value; m_positionByteIndex = m_array[m_positionArrayIndex].Length)
+          for (; m_position - m_positionByteIndex > value; m_positionByteIndex = m_array[m_positionArrayIndex].Length)
           {
-                        m_position -= (long)m_positionByteIndex;
+            m_position -= m_positionByteIndex;
             --m_positionArrayIndex;
           }
         }
-                m_positionByteIndex += (int) (value - m_position);
-                m_position = value;
+        m_positionByteIndex += (int)(value - m_position);
+        m_position = value;
       }
     }
 
@@ -105,7 +105,7 @@ namespace NARCFileReadingDLL
 
     protected override void Dispose(bool disposing)
     {
-            m_array = (List<byte[]>) null;
+      m_array = null;
       base.Dispose(disposing);
     }
 
@@ -119,7 +119,7 @@ namespace NARCFileReadingDLL
         throw new ArgumentNullException();
       if (offset < 0 || count < 0)
         throw new ArgumentException();
-      if ((long) offset > buffer.LongLength || buffer.LongLength - (long) offset < (long) count)
+      if (offset > buffer.LongLength || buffer.LongLength - offset < count)
         throw new ArgumentOutOfRangeException();
       for (int index = 0; index < count; ++index)
       {
@@ -136,13 +136,13 @@ namespace NARCFileReadingDLL
       switch (origin)
       {
         case SeekOrigin.Begin:
-                    Position = offset;
+          Position = offset;
           break;
         case SeekOrigin.Current:
-                    Position += offset;
+          Position += offset;
           break;
         case SeekOrigin.End:
-                    Position = Length + offset;
+          Position = Length + offset;
           break;
       }
       return Position;
@@ -154,28 +154,28 @@ namespace NARCFileReadingDLL
         throw new ArgumentException();
       if (m_length < value)
       {
-                m_array.Add(new byte[value - m_length]);
+        m_array.Add(new byte[value - m_length]);
       }
       else
       {
-        while (m_length - (long)m_array[m_array.Count - 1].Length >= value)
+        while (m_length - m_array[m_array.Count - 1].Length >= value)
         {
-                    m_length -= (long)m_array[m_array.Count - 1].Length;
-                    m_array.RemoveAt(m_array.Count - 1);
+          m_length -= m_array[m_array.Count - 1].Length;
+          m_array.RemoveAt(m_array.Count - 1);
         }
         byte[] numArray = new byte[m_length - value];
         for (int index = 0; index < numArray.Length; ++index)
           numArray[index] = m_array[m_array.Count - 1][index];
-                m_array.RemoveAt(m_array.Count - 1);
-                m_array.Add(numArray);
+        m_array.RemoveAt(m_array.Count - 1);
+        m_array.Add(numArray);
         if (m_position > value)
         {
-                    m_position = value;
-                    m_positionArrayIndex = m_array.Count;
-                    m_positionByteIndex = 0;
+          m_position = value;
+          m_positionArrayIndex = m_array.Count;
+          m_positionByteIndex = 0;
         }
       }
-            m_length = value;
+      m_length = value;
     }
 
     public override void Write(byte[] buffer, int offset, int count)
@@ -186,13 +186,13 @@ namespace NARCFileReadingDLL
         throw new ArgumentNullException();
       if (offset < 0 || count < 0)
         throw new ArgumentException();
-      if ((long) offset > buffer.LongLength || buffer.LongLength - (long) offset < (long) count)
+      if (offset > buffer.LongLength || buffer.LongLength - offset < count)
         throw new ArgumentOutOfRangeException();
-      if ((long) count > Length - Position)
-                SetLength(Position + (long) count);
+      if (count > Length - Position)
+        SetLength(Position + count);
       for (int index = 0; index < count; ++index)
       {
-                m_array[m_positionArrayIndex][m_positionByteIndex] = buffer[offset + index];
+        m_array[m_positionArrayIndex][m_positionByteIndex] = buffer[offset + index];
         ++Position;
       }
     }

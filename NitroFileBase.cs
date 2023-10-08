@@ -20,15 +20,15 @@ namespace NARCFileReadingDLL
 
     public NitroFileBase()
     {
-            Magic = "AAAA";
-            m_shBom = (short) -257;
-            m_shUnknown1 = (short) 256;
-            m_shHeaderSize = (short) 16;
+      Magic = "AAAA";
+      m_shBom = -257;
+      m_shUnknown1 = 256;
+      m_shHeaderSize = 16;
     }
 
     public NitroFileBase(BinaryReader brrReader)
     {
-            ReadFrom(brrReader);
+      ReadFrom(brrReader);
     }
 
     public abstract string Magic { get; set; }
@@ -77,12 +77,12 @@ namespace NARCFileReadingDLL
     {
       if (m_fcFileChanged == null)
         return;
-            m_fcFileChanged((FIMGFrame.FileImageEntryBase) this);
+      m_fcFileChanged(this);
     }
 
     public static NitroFileBase ReadFrom(BinaryReader brrReader, int nSize, ref int nMaxSize)
     {
-      if (nSize < 0 || nSize > nMaxSize || (long) nSize > brrReader.BaseStream.Length - brrReader.BaseStream.Position)
+      if (nSize < 0 || nSize > nMaxSize || nSize > brrReader.BaseStream.Length - brrReader.BaseStream.Position)
         throw new FormatException();
       long position = brrReader.BaseStream.Position;
       NitroFileBase nitroFileBase;
@@ -91,11 +91,11 @@ namespace NARCFileReadingDLL
         Type type = Type.GetType("NARCFileReadingDLL." + Global.ReplaceOrder(new string(brrReader.ReadChars(4))) + "NitroFile");
         brrReader.BaseStream.Position -= 4L;
         if (type == null)
-          nitroFileBase = (NitroFileBase) new SimpleNitroFile(brrReader);
+          nitroFileBase = new SimpleNitroFile(brrReader);
         else
-          nitroFileBase = (NitroFileBase) Activator.CreateInstance(type, new object[1]
+          nitroFileBase = (NitroFileBase)Activator.CreateInstance(type, new object[1]
           {
-            (object) brrReader
+             brrReader
           });
         if (nitroFileBase.Size != nSize)
           throw new FormatException();
@@ -111,28 +111,28 @@ namespace NARCFileReadingDLL
 
     public override void ReadFrom(BinaryReader brrReader)
     {
-            Magic = Global.ReplaceOrder(new string(brrReader.ReadChars(4)));
+      Magic = Global.ReplaceOrder(new string(brrReader.ReadChars(4)));
       foreach (char ch in Magic)
       {
         if (ch < 'A' || ch > 'Z')
           throw new FormatException();
       }
-            m_shBom = brrReader.ReadInt16();
-            m_shUnknown1 = brrReader.ReadInt16();
-            m_nFileSize = brrReader.ReadInt32();
-      if ((long)m_nFileSize > brrReader.BaseStream.Length - brrReader.BaseStream.Position + 12L)
+      m_shBom = brrReader.ReadInt16();
+      m_shUnknown1 = brrReader.ReadInt16();
+      m_nFileSize = brrReader.ReadInt32();
+      if (m_nFileSize > brrReader.BaseStream.Length - brrReader.BaseStream.Position + 12L)
         throw new FormatException();
-            m_shHeaderSize = brrReader.ReadInt16();
-            m_lstnffFrames = new List<NitroFileFrameBase>((int) brrReader.ReadUInt16());
-      for (ushort index = 0; (int) index < m_lstnffFrames.Capacity - 1; ++index)
+      m_shHeaderSize = brrReader.ReadInt16();
+      m_lstnffFrames = new List<NitroFileFrameBase>(brrReader.ReadUInt16());
+      for (ushort index = 0; index < m_lstnffFrames.Capacity - 1; ++index)
       {
-                m_lstnffFrames.Add(NitroFileFrameBase.CreateFrom(brrReader));
-                m_lstnffFrames[(int) index].ContentChanged += new EventHandler(NitroFile_ContentChanged);
-        if (m_lstnffFrames[m_lstnffFrames.Count - 1].Size % 2 == 1 && brrReader.ReadByte() != (byte) 0)
+        m_lstnffFrames.Add(NitroFileFrameBase.CreateFrom(brrReader));
+        m_lstnffFrames[index].ContentChanged += new EventHandler(NitroFile_ContentChanged);
+        if (m_lstnffFrames[m_lstnffFrames.Count - 1].Size % 2 == 1 && brrReader.ReadByte() != 0)
           throw new FormatException();
       }
-            m_lstnffFrames.Add(NitroFileFrameBase.CreateFrom(brrReader));
-            m_lstnffFrames[m_lstnffFrames.Count - 1].ContentChanged += new EventHandler(NitroFile_ContentChanged);
+      m_lstnffFrames.Add(NitroFileFrameBase.CreateFrom(brrReader));
+      m_lstnffFrames[m_lstnffFrames.Count - 1].ContentChanged += new EventHandler(NitroFile_ContentChanged);
     }
 
     public override void WriteTo(BinaryWriter brwWriter)
@@ -143,42 +143,42 @@ namespace NARCFileReadingDLL
       brwWriter.Write(m_nFileSize);
       brwWriter.Write(m_shHeaderSize);
       brwWriter.Write((ushort)m_lstnffFrames.Count);
-      for (short index = 0; (int) index < m_lstnffFrames.Count - 1; ++index)
+      for (short index = 0; index < m_lstnffFrames.Count - 1; ++index)
       {
-                m_lstnffFrames[(int) index].WriteTo(brwWriter);
-        if (m_lstnffFrames[(int) index].Size % 2 == 1)
-          brwWriter.Write((byte) 0);
+        m_lstnffFrames[index].WriteTo(brwWriter);
+        if (m_lstnffFrames[index].Size % 2 == 1)
+          brwWriter.Write((byte)0);
       }
-            m_lstnffFrames[m_lstnffFrames.Count - 1].WriteTo(brwWriter);
+      m_lstnffFrames[m_lstnffFrames.Count - 1].WriteTo(brwWriter);
     }
 
     public void AddFrame(NitroFileFrameBase nffbFrame)
     {
       nffbFrame.ContentChanged += new EventHandler(NitroFile_ContentChanged);
-            m_lstnffFrames.Add(nffbFrame);
+      m_lstnffFrames.Add(nffbFrame);
       if (m_fcFileChanged == null)
         return;
-            m_fcFileChanged((FIMGFrame.FileImageEntryBase) this);
+      m_fcFileChanged(this);
     }
 
     public void InsertFrame(int nIndex, NitroFileFrameBase nffbFrame)
     {
       nffbFrame.ContentChanged += new EventHandler(NitroFile_ContentChanged);
-            m_lstnffFrames.Insert(nIndex, nffbFrame);
+      m_lstnffFrames.Insert(nIndex, nffbFrame);
       if (m_fcFileChanged == null)
         return;
-            m_fcFileChanged((FIMGFrame.FileImageEntryBase) this);
+      m_fcFileChanged(this);
     }
 
     public void RemoveFrame(NitroFileFrameBase nffbFrame)
     {
       if (!m_lstnffFrames.Contains(nffbFrame))
         return;
-            m_lstnffFrames.Remove(nffbFrame);
+      m_lstnffFrames.Remove(nffbFrame);
       nffbFrame.ContentChanged -= new EventHandler(NitroFile_ContentChanged);
       if (m_fcFileChanged == null)
         return;
-            m_fcFileChanged((FIMGFrame.FileImageEntryBase) this);
+      m_fcFileChanged(this);
     }
 
     public void RemoveFrameAt(int nIndex)
@@ -186,11 +186,11 @@ namespace NARCFileReadingDLL
       if (nIndex >= m_lstnffFrames.Count)
         return;
       NitroFileFrameBase lstnffFrame = m_lstnffFrames[nIndex];
-            m_lstnffFrames.RemoveAt(nIndex);
+      m_lstnffFrames.RemoveAt(nIndex);
       lstnffFrame.ContentChanged -= new EventHandler(NitroFile_ContentChanged);
       if (m_fcFileChanged == null)
         return;
-            m_fcFileChanged((FIMGFrame.FileImageEntryBase) this);
+      m_fcFileChanged(this);
     }
   }
 }

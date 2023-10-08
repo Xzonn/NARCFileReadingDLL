@@ -15,7 +15,7 @@ namespace NARCFileReadingDLL
 
     public NitroFileFrameBase(BinaryReader brrReader)
     {
-            ReadFrom(brrReader);
+      ReadFrom(brrReader);
     }
 
     public abstract string Magic { get; set; }
@@ -28,11 +28,11 @@ namespace NARCFileReadingDLL
     {
       add
       {
-                m_ehContentChanged += value;
+        m_ehContentChanged += value;
       }
       remove
       {
-                m_ehContentChanged -= value;
+        m_ehContentChanged -= value;
       }
     }
 
@@ -62,7 +62,7 @@ namespace NARCFileReadingDLL
       {
         if (value == null)
           return;
-                SetContent((byte[]) value.Clone());
+        SetContent((byte[])value.Clone());
       }
     }
 
@@ -71,13 +71,13 @@ namespace NARCFileReadingDLL
       get
       {
         ByteArrayStream byteArrayStream = new ByteArrayStream();
-                WriteTo(new BinaryWriter((Stream) byteArrayStream));
+        WriteTo(new BinaryWriter(byteArrayStream));
         byteArrayStream.Position = 0L;
-        return new BinaryReader((Stream) byteArrayStream).ReadBytes((int) byteArrayStream.Length);
+        return new BinaryReader(byteArrayStream).ReadBytes((int)byteArrayStream.Length);
       }
       set
       {
-                ReadFrom(new BinaryReader((Stream) new ByteArrayStream(value)));
+        ReadFrom(new BinaryReader(new ByteArrayStream(value)));
       }
     }
 
@@ -93,11 +93,11 @@ namespace NARCFileReadingDLL
       Type type = Type.GetType("NARCFileReadingDLL." + str + "Frame");
       NitroFileFrameBase nitroFileFrameBase;
       if (type == null)
-        nitroFileFrameBase = (NitroFileFrameBase) new SimpleNitroFileFrame(brrReader);
+        nitroFileFrameBase = new SimpleNitroFileFrame(brrReader);
       else
-        nitroFileFrameBase = (NitroFileFrameBase) Activator.CreateInstance(type, new object[1]
+        nitroFileFrameBase = (NitroFileFrameBase)Activator.CreateInstance(type, new object[1]
         {
-          (object) brrReader
+           brrReader
         });
       return nitroFileFrameBase;
     }
@@ -110,11 +110,11 @@ namespace NARCFileReadingDLL
         if (ch < 'A' || ch > 'Z')
           throw new FormatException();
       }
-            Magic = str;
-            SetContent(brrReader.ReadBytes(brrReader.ReadInt32() - 8));
+      Magic = str;
+      SetContent(brrReader.ReadBytes(brrReader.ReadInt32() - 8));
       if (m_ehContentChanged == null)
         return;
-            m_ehContentChanged((object) this, new EventArgs());
+      m_ehContentChanged(this, new EventArgs());
     }
 
     public void WriteTo(BinaryWriter brwWriter)

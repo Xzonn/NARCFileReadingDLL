@@ -23,10 +23,10 @@ namespace NARCFileReadingDLL
 
     public NARCFile(BinaryReader brrReader)
     {
-            m_strMagic = new string(brrReader.ReadChars(4));
+      m_strMagic = new string(brrReader.ReadChars(4));
       if (!m_strMagic.Contains('N'.ToString()) || !m_strMagic.Contains('A'.ToString()) || (!m_strMagic.Contains('R'.ToString()) || !m_strMagic.Contains('C'.ToString())))
         throw new FormatException();
-            m_shBom = brrReader.ReadInt16();
+      m_shBom = brrReader.ReadInt16();
       switch (m_shBom)
       {
         case -4097:
@@ -48,16 +48,16 @@ namespace NARCFileReadingDLL
         default:
           throw new FormatException();
       }
-            m_shUnknown1 = brrReader.ReadInt16();
-      if ((long) brrReader.ReadInt32() != brrReader.BaseStream.Length)
+      m_shUnknown1 = brrReader.ReadInt16();
+      if (brrReader.ReadInt32() != brrReader.BaseStream.Length)
         throw new FormatException();
-            m_shUnknown2 = brrReader.ReadInt16();
-            m_shFramesCount = brrReader.ReadInt16();
-      if (m_shFramesCount != (short) 3)
+      m_shUnknown2 = brrReader.ReadInt16();
+      m_shFramesCount = brrReader.ReadInt16();
+      if (m_shFramesCount != 3)
         throw new FormatException();
-            m_fatfFATB = (FATBFrame) NARCFileFrame.ReadFrom(brrReader, (FATBFrame) null);
-            m_fntfFNTB = (FNTBFrame) NARCFileFrame.ReadFrom(brrReader, (FATBFrame) null);
-            m_fimgfFIMG = (FIMGFrame) NARCFileFrame.ReadFrom(brrReader, m_fatfFATB);
+      m_fatfFATB = (FATBFrame)NARCFileFrame.ReadFrom(brrReader, null);
+      m_fntfFNTB = (FNTBFrame)NARCFileFrame.ReadFrom(brrReader, null);
+      m_fimgfFIMG = (FIMGFrame)NARCFileFrame.ReadFrom(brrReader, m_fatfFATB);
       if (brrReader.BaseStream.Position != brrReader.BaseStream.Length)
         throw new FormatException();
     }
@@ -97,13 +97,13 @@ namespace NARCFileReadingDLL
       int num = 0;
       for (int index = 0; index < m_fimgfFIMG.Entries.Count; ++index)
       {
-                m_fatfFATB.Entries[index].Start = num;
-                m_fatfFATB.Entries[index].End = num + m_fimgfFIMG.Entries[index].Size;
+        m_fatfFATB.Entries[index].Start = num;
+        m_fatfFATB.Entries[index].End = num + m_fimgfFIMG.Entries[index].Size;
         num += m_fimgfFIMG.Entries[index].Size + (4 - m_fimgfFIMG.Entries[index].Size % 4) % 4;
       }
-            m_fatfFATB.WriteTo(brwWriter);
-            m_fntfFNTB.WriteTo(brwWriter);
-            m_fimgfFIMG.WriteTo(brwWriter);
+      m_fatfFATB.WriteTo(brwWriter);
+      m_fntfFNTB.WriteTo(brwWriter);
+      m_fimgfFIMG.WriteTo(brwWriter);
     }
   }
 }

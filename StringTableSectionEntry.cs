@@ -12,36 +12,36 @@ namespace NARCFileReadingDLL
 {
   public class StringTableSectionEntry : IStringTableSectionEntry
   {
-    private static readonly StringTableSectionEntry.BinaryString[] BINARY_STRINGS = new StringTableSectionEntry.BinaryString[28]
+    private static readonly BinaryString[] BINARY_STRINGS = new BinaryString[28]
     {
-      new StringTableSectionEntry.BinaryString("\\FFFE\\", "\\n"),
-      new StringTableSectionEntry.BinaryString("\\F000\\Ā\\0001\\\\0000\\", "\\Name0\\"),
-      new StringTableSectionEntry.BinaryString("\\F000\\Ā\\0001\\\\0001\\", "\\Name1\\"),
-      new StringTableSectionEntry.BinaryString("\\F000\\Ă\\0001\\\\0000\\", "\\Pokemon1\\"),
-      new StringTableSectionEntry.BinaryString("\\F000\\ā\\0001\\\\0000\\", "\\Pokemon2\\"),
-      new StringTableSectionEntry.BinaryString("\\F000\\ć\\0001\\\\0000\\", "\\Move0\\"),
-      new StringTableSectionEntry.BinaryString("\\F000\\ć\\0001\\\\0001\\", "\\Move1\\"),
-      new StringTableSectionEntry.BinaryString("\\F000\\ć\\0001\\\\0002\\", "\\Move2\\"),
-      new StringTableSectionEntry.BinaryString("\\F000\\븅\\0001\\\\0001\\", "\\Speed1\\"),
-      new StringTableSectionEntry.BinaryString("\\F000\\븅\\0001\\\\0003\\", "\\Speed3\\"),
-      new StringTableSectionEntry.BinaryString("\\F000\\븅\\0001\\\\0005\\", "\\Speed5\\"),
-      new StringTableSectionEntry.BinaryString("\\F000\\븅\\0001\\\\0006\\", "\\Speed6\\"),
-      new StringTableSectionEntry.BinaryString("\\F000\\븁\\0000\\", "\\(A) Dialog\\"),
-      new StringTableSectionEntry.BinaryString("\\F000\\븀\\0000\\", "\\(A)\\"),
-      new StringTableSectionEntry.BinaryString("\\F000\\봂\\0001\\\\0000\\", "\\Center\\"),
-      new StringTableSectionEntry.BinaryString("\\F000\\봃\\0001\\\\0000\\", "\\Right\\"),
-      new StringTableSectionEntry.BinaryString("\\F000\\봀\\0003\\\\0001\\\\0002\\\\0000\\", "\\Default Shadow\\"),
-      new StringTableSectionEntry.BinaryString("\\F000\\봀\\0003\\\\0003\\\\0004\\\\0000\\", "\\Cyan Shadow\\"),
-      new StringTableSectionEntry.BinaryString("\\F000\\봀\\0003\\\\0005\\\\0006\\\\0000\\", "\\Red Shadow\\"),
-      new StringTableSectionEntry.BinaryString("\\F000\\봀\\0003\\\\0007\\\\0008\\\\0000\\", "\\Black Shadow\\"),
-      new StringTableSectionEntry.BinaryString("\\F000\\\\FF00\\\\0001\\\\0000\\", "\\Black\\"),
-      new StringTableSectionEntry.BinaryString("\\F000\\\\FF00\\\\0001\\\\0001\\", "\\Red\\"),
-      new StringTableSectionEntry.BinaryString("\\F000\\\\FF00\\\\0001\\\\0002\\", "\\Blue\\"),
-      new StringTableSectionEntry.BinaryString("\\F000\\\\FF00\\\\0001\\\\0003\\", "\\Yellow\\"),
-      new StringTableSectionEntry.BinaryString("\\F000\\\\FF00\\\\0001\\\\0004\\", "\\Green\\"),
-      new StringTableSectionEntry.BinaryString("\\F000\\븂\\0001\\\\0014\\", "\\Small Delay\\"),
-      new StringTableSectionEntry.BinaryString("\\F000\\븉\\0001\\\\0000\\", "\\Unknown0\\"),
-      new StringTableSectionEntry.BinaryString("\\F000\\븉\\0001\\\\0001\\", "\\Unknown1\\")
+      new BinaryString("\\FFFE\\", "\\n"),
+      new BinaryString("\\F000\\Ā\\0001\\\\0000\\", "\\Name0\\"),
+      new BinaryString("\\F000\\Ā\\0001\\\\0001\\", "\\Name1\\"),
+      new BinaryString("\\F000\\Ă\\0001\\\\0000\\", "\\Pokemon1\\"),
+      new BinaryString("\\F000\\ā\\0001\\\\0000\\", "\\Pokemon2\\"),
+      new BinaryString("\\F000\\ć\\0001\\\\0000\\", "\\Move0\\"),
+      new BinaryString("\\F000\\ć\\0001\\\\0001\\", "\\Move1\\"),
+      new BinaryString("\\F000\\ć\\0001\\\\0002\\", "\\Move2\\"),
+      new BinaryString("\\F000\\븅\\0001\\\\0001\\", "\\Speed1\\"),
+      new BinaryString("\\F000\\븅\\0001\\\\0003\\", "\\Speed3\\"),
+      new BinaryString("\\F000\\븅\\0001\\\\0005\\", "\\Speed5\\"),
+      new BinaryString("\\F000\\븅\\0001\\\\0006\\", "\\Speed6\\"),
+      new BinaryString("\\F000\\븁\\0000\\", "\\(A) Dialog\\"),
+      new BinaryString("\\F000\\븀\\0000\\", "\\(A)\\"),
+      new BinaryString("\\F000\\봂\\0001\\\\0000\\", "\\Center\\"),
+      new BinaryString("\\F000\\봃\\0001\\\\0000\\", "\\Right\\"),
+      new BinaryString("\\F000\\봀\\0003\\\\0001\\\\0002\\\\0000\\", "\\Default Shadow\\"),
+      new BinaryString("\\F000\\봀\\0003\\\\0003\\\\0004\\\\0000\\", "\\Cyan Shadow\\"),
+      new BinaryString("\\F000\\봀\\0003\\\\0005\\\\0006\\\\0000\\", "\\Red Shadow\\"),
+      new BinaryString("\\F000\\봀\\0003\\\\0007\\\\0008\\\\0000\\", "\\Black Shadow\\"),
+      new BinaryString("\\F000\\\\FF00\\\\0001\\\\0000\\", "\\Black\\"),
+      new BinaryString("\\F000\\\\FF00\\\\0001\\\\0001\\", "\\Red\\"),
+      new BinaryString("\\F000\\\\FF00\\\\0001\\\\0002\\", "\\Blue\\"),
+      new BinaryString("\\F000\\\\FF00\\\\0001\\\\0003\\", "\\Yellow\\"),
+      new BinaryString("\\F000\\\\FF00\\\\0001\\\\0004\\", "\\Green\\"),
+      new BinaryString("\\F000\\븂\\0001\\\\0014\\", "\\Small Delay\\"),
+      new BinaryString("\\F000\\븉\\0001\\\\0000\\", "\\Unknown0\\"),
+      new BinaryString("\\F000\\븉\\0001\\\\0001\\", "\\Unknown1\\")
     };
     private string m_strText;
     private ushort m_ushKey;
@@ -49,7 +49,7 @@ namespace NARCFileReadingDLL
 
     public StringTableSectionEntry(BinaryReader brrReader, ushort ushCharacterCount)
     {
-            ReadFrom(brrReader, ushCharacterCount);
+      ReadFrom(brrReader, ushCharacterCount);
     }
 
     public int Size
@@ -76,7 +76,7 @@ namespace NARCFileReadingDLL
           else
           {
             bool flag = false;
-            foreach (StringTableSectionEntry.BinaryString binaryString in StringTableSectionEntry.BINARY_STRINGS)
+            foreach (BinaryString binaryString in StringTableSectionEntry.BINARY_STRINGS)
             {
               if (strText.Length >= startIndex + binaryString.String.Length && strText.Substring(startIndex, binaryString.String.Length) == binaryString.String)
               {
@@ -109,13 +109,13 @@ namespace NARCFileReadingDLL
           throw new FormatException();
         foreach (char c in value)
         {
-          if ((ushort) char.GetUnicodeCategory(c) == ushort.MaxValue)
+          if ((ushort)char.GetUnicodeCategory(c) == ushort.MaxValue)
             throw new FormatException();
         }
-                m_strText = value;
+        m_strText = value;
         if (m_ehChanged == null)
           return;
-                m_ehChanged((object) this, new EventArgs());
+        m_ehChanged(this, new EventArgs());
       }
     }
 
@@ -131,55 +131,55 @@ namespace NARCFileReadingDLL
     {
       add
       {
-                m_ehChanged += value;
+        m_ehChanged += value;
       }
       remove
       {
-                m_ehChanged -= value;
+        m_ehChanged -= value;
       }
     }
 
     public void ReadFrom(BinaryReader brrReader, ushort ushCharacterCount)
     {
-      if (brrReader.BaseStream.Length - brrReader.BaseStream.Position < (long) ushCharacterCount)
+      if (brrReader.BaseStream.Length - brrReader.BaseStream.Position < ushCharacterCount)
         throw new FormatException();
-      ushort[] numArray = new ushort[(int) ushCharacterCount];
-      for (int index = 0; index < (int) ushCharacterCount; ++index)
+      ushort[] numArray = new ushort[ushCharacterCount];
+      for (int index = 0; index < ushCharacterCount; ++index)
         numArray[index] = brrReader.ReadUInt16();
-      ushort num1 = (ushort) ((uint) numArray[(int) ushCharacterCount - 1] ^ (uint) ushort.MaxValue);
-      for (int index = (int) ushCharacterCount - 1; index > 0; --index)
+      ushort num1 = (ushort)(numArray[ushCharacterCount - 1] ^ (uint)ushort.MaxValue);
+      for (int index = ushCharacterCount - 1; index > 0; --index)
       {
         numArray[index] ^= num1;
-        num1 = (ushort) (((int) num1 >> 3 | (int) num1 << 13) & (int) ushort.MaxValue);
+        num1 = (ushort)((num1 >> 3 | num1 << 13) & ushort.MaxValue);
       }
       numArray[0] ^= num1;
-            m_ushKey = num1;
-            m_strText = string.Empty;
-      for (int index1 = 0; index1 < (int) ushCharacterCount - 1; ++index1)
+      m_ushKey = num1;
+      m_strText = string.Empty;
+      for (int index1 = 0; index1 < ushCharacterCount - 1; ++index1)
       {
         if (numArray[index1] == ushort.MaxValue)
           throw new FormatException();
-        if (numArray[index1] > (ushort) 20 && numArray[index1] <= (ushort) 65520 && (numArray[index1] != (ushort) 61440 && char.GetUnicodeCategory((char) numArray[index1]) != UnicodeCategory.OtherNotAssigned))
+        if (numArray[index1] > 20 && numArray[index1] <= 65520 && (numArray[index1] != 61440 && char.GetUnicodeCategory((char)numArray[index1]) != UnicodeCategory.OtherNotAssigned))
         {
-          if (((char) numArray[index1]).ToString() == "\\")
-                        m_strText += "\\";
-                    m_strText += ((char) numArray[index1]).ToString();
+          if (((char)numArray[index1]).ToString() == "\\")
+            m_strText += "\\";
+          m_strText += ((char)numArray[index1]).ToString();
         }
         else
         {
-                    m_strText += "\\";
+          m_strText += "\\";
           ushort num2 = numArray[index1];
           for (int index2 = 0; index2 < 4; ++index2)
           {
-                        m_strText = (int) num2 % 16 <= 9 ? m_strText.Insert(m_strText.Length - index2, ((char) ((int) num2 % 16 + 48)).ToString()) : m_strText.Insert(m_strText.Length - index2, ((char) ((int) num2 % 16 - 10 + 65)).ToString());
-            num2 /= (ushort) 16;
+            m_strText = num2 % 16 <= 9 ? m_strText.Insert(m_strText.Length - index2, ((char)(num2 % 16 + 48)).ToString()) : m_strText.Insert(m_strText.Length - index2, ((char)(num2 % 16 - 10 + 65)).ToString());
+            num2 /= 16;
           }
-                    m_strText += "\\";
-          foreach (StringTableSectionEntry.BinaryString binaryString in StringTableSectionEntry.BINARY_STRINGS)
+          m_strText += "\\";
+          foreach (BinaryString binaryString in StringTableSectionEntry.BINARY_STRINGS)
           {
             if (m_strText.EndsWith(binaryString.Binary))
             {
-                            m_strText = m_strText.Remove(m_strText.Length - binaryString.Binary.Length) + binaryString.String;
+              m_strText = m_strText.Remove(m_strText.Length - binaryString.Binary.Length) + binaryString.String;
               break;
             }
           }
@@ -199,11 +199,11 @@ namespace NARCFileReadingDLL
           ++startIndex;
           if (str[startIndex] == '\\')
           {
-            num2 = (ushort) 92;
+            num2 = 92;
           }
           else
           {
-            foreach (StringTableSectionEntry.BinaryString binaryString in StringTableSectionEntry.BINARY_STRINGS)
+            foreach (BinaryString binaryString in StringTableSectionEntry.BINARY_STRINGS)
             {
               if (str.Length >= startIndex - 1 + binaryString.String.Length && str.Substring(startIndex - 1, binaryString.String.Length) == binaryString.String)
               {
@@ -215,19 +215,19 @@ namespace NARCFileReadingDLL
             ushort num3 = 0;
             for (int index = 0; index < 3; ++index)
             {
-              num3 = (ushort) ((str[startIndex] <= '9' ? (uint) (ushort) ((uint) num3 + (uint) (ushort) ((uint) str[startIndex] - 48U)) : (uint) (ushort) ((uint) num3 + (uint) (ushort) ((int) str[startIndex] - 65 + 10))) * 16U);
+              num3 = (ushort)((str[startIndex] <= '9' ? (ushort)(num3 + (uint)(ushort)(str[startIndex] - 48U)) : (ushort)(num3 + (uint)(ushort)(str[startIndex] - 65 + 10))) * 16U);
               ++startIndex;
             }
-            num2 = str[startIndex] <= '9' ? (ushort) ((uint) num3 + (uint) (ushort) ((uint) str[startIndex] - 48U)) : (ushort) ((uint) num3 + (uint) (ushort) ((int) str[startIndex] - 65 + 10));
+            num2 = str[startIndex] <= '9' ? (ushort)(num3 + (uint)(ushort)(str[startIndex] - 48U)) : (ushort)(num3 + (uint)(ushort)(str[startIndex] - 65 + 10));
           }
         }
         else
-          num2 = (ushort) str[startIndex];
-        ushort num4 = (ushort) ((uint) num2 ^ (uint) num1);
-        num1 = (ushort) (((int) num1 << 3 | (int) num1 >> 13) & (int) ushort.MaxValue);
+          num2 = str[startIndex];
+        ushort num4 = (ushort)(num2 ^ (uint)num1);
+        num1 = (ushort)((num1 << 3 | num1 >> 13) & ushort.MaxValue);
         brwWriter.Write(num4);
       }
-      brwWriter.Write((ushort) ((uint) ushort.MaxValue ^ (uint) num1));
+      brwWriter.Write((ushort)(ushort.MaxValue ^ (uint)num1));
     }
 
     private struct BinaryString
@@ -237,8 +237,8 @@ namespace NARCFileReadingDLL
 
       public BinaryString(string strBinary, string strString)
       {
-                m_strBinary = strBinary;
-                m_strString = strString;
+        m_strBinary = strBinary;
+        m_strString = strString;
       }
 
       public string Binary

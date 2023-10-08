@@ -18,7 +18,7 @@ namespace NARCFileReadingDLL
     private byte m_bUnknown3;
     private byte m_bUnknown4;
     private byte m_bUnknown5;
-    private FINFFrame.Encoding m_encEncodingCode;
+    private Encoding m_encEncodingCode;
     private uint m_unCGLPOffset;
     private uint m_unCWDHOffset;
     private uint m_unCMAPOffset;
@@ -89,7 +89,7 @@ namespace NARCFileReadingDLL
       }
     }
 
-    public FINFFrame.Encoding EncodingCode
+    public Encoding EncodingCode
     {
       get
       {
@@ -123,7 +123,7 @@ namespace NARCFileReadingDLL
 
     protected override byte[] GetContent()
     {
-      BinaryWriter binaryWriter = new BinaryWriter((Stream) new ByteArrayStream());
+      BinaryWriter binaryWriter = new BinaryWriter(new ByteArrayStream());
       binaryWriter.Write(m_bUnknown1);
       binaryWriter.Write(m_bSpacing);
       binaryWriter.Write(m_shUnknown2);
@@ -135,22 +135,22 @@ namespace NARCFileReadingDLL
       binaryWriter.Write(m_unCWDHOffset);
       binaryWriter.Write(m_unCMAPOffset);
       binaryWriter.BaseStream.Position = 0L;
-      return new BinaryReader(binaryWriter.BaseStream).ReadBytes((int) binaryWriter.BaseStream.Length);
+      return new BinaryReader(binaryWriter.BaseStream).ReadBytes((int)binaryWriter.BaseStream.Length);
     }
 
     protected override void SetContent(byte[] arrbContent)
     {
-      BinaryReader binaryReader = new BinaryReader((Stream) new ByteArrayStream(arrbContent));
-            m_bUnknown1 = binaryReader.ReadByte();
-            m_bSpacing = binaryReader.ReadByte();
-            m_shUnknown2 = binaryReader.ReadInt16();
-            m_bUnknown3 = binaryReader.ReadByte();
-            m_bUnknown4 = binaryReader.ReadByte();
-            m_bUnknown5 = binaryReader.ReadByte();
-            m_encEncodingCode = (FINFFrame.Encoding) binaryReader.ReadByte();
-            m_unCGLPOffset = binaryReader.ReadUInt32();
-            m_unCWDHOffset = binaryReader.ReadUInt32();
-            m_unCMAPOffset = binaryReader.ReadUInt32();
+      BinaryReader binaryReader = new BinaryReader(new ByteArrayStream(arrbContent));
+      m_bUnknown1 = binaryReader.ReadByte();
+      m_bSpacing = binaryReader.ReadByte();
+      m_shUnknown2 = binaryReader.ReadInt16();
+      m_bUnknown3 = binaryReader.ReadByte();
+      m_bUnknown4 = binaryReader.ReadByte();
+      m_bUnknown5 = binaryReader.ReadByte();
+      m_encEncodingCode = (Encoding)binaryReader.ReadByte();
+      m_unCGLPOffset = binaryReader.ReadUInt32();
+      m_unCWDHOffset = binaryReader.ReadUInt32();
+      m_unCMAPOffset = binaryReader.ReadUInt32();
     }
 
     public enum Encoding

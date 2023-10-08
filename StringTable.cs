@@ -17,14 +17,14 @@ namespace NARCFileReadingDLL
 
     public StringTable(BinaryReader brrReader)
     {
-            ReadFrom(brrReader);
+      ReadFrom(brrReader);
     }
 
     public IStringTableSection[] StringTableSections
     {
       get
       {
-        return (IStringTableSection[])m_arrStringTableSections;
+        return m_arrStringTableSections;
       }
     }
 
@@ -32,26 +32,26 @@ namespace NARCFileReadingDLL
     {
       if (brrReader.BaseStream.Length - brrReader.BaseStream.Position < 12L)
         throw new FormatException();
-            m_arrStringTableSections = new StringTableSection[(int) brrReader.ReadUInt16()];
+      m_arrStringTableSections = new StringTableSection[(brrReader.ReadUInt16())];
       ushort ushEntriesCount = brrReader.ReadUInt16();
       uint num1 = brrReader.ReadUInt32();
-            m_unUnknown1 = brrReader.ReadUInt32();
-            m_unUnknown2 = brrReader.ReadUInt32();
-      if (num1 < (uint) (8 * (int) ushEntriesCount * m_arrStringTableSections.Length))
+      m_unUnknown1 = brrReader.ReadUInt32();
+      m_unUnknown2 = brrReader.ReadUInt32();
+      if (num1 < (uint)(8 * ushEntriesCount * m_arrStringTableSections.Length))
         throw new FormatException();
-      if (brrReader.BaseStream.Length != (long) (num1 + (uint) (12 + 4 * m_arrStringTableSections.Length)))
+      if (brrReader.BaseStream.Length != num1 + (uint)(12 + 4 * m_arrStringTableSections.Length))
         throw new FormatException();
-      uint num2 = (uint) (12 + 4 * m_arrStringTableSections.Length);
+      uint num2 = (uint)(12 + 4 * m_arrStringTableSections.Length);
       for (int index = 0; index < m_arrStringTableSections.Length; ++index)
       {
-        brrReader.BaseStream.Position = 16L + (long) index * (long) (uint)m_arrStringTableSections.Length;
-        if (brrReader.BaseStream.Position != (long) num2)
+        brrReader.BaseStream.Position = 16L + index * (uint)m_arrStringTableSections.Length;
+        if (brrReader.BaseStream.Position != num2)
           throw new FormatException();
-                m_arrStringTableSections[index] = new StringTableSection(brrReader, ushEntriesCount);
-        num2 += (uint) brrReader.BaseStream.Position;
-        if ((long)m_arrStringTableSections[index].Size != (long) num1)
+        m_arrStringTableSections[index] = new StringTableSection(brrReader, ushEntriesCount);
+        num2 += (uint)brrReader.BaseStream.Position;
+        if (m_arrStringTableSections[index].Size != num1)
           throw new FormatException();
-                m_arrStringTableSections[index].Changed += new EventHandler(StringTableSection_Changed);
+        m_arrStringTableSections[index].Changed += new EventHandler(StringTableSection_Changed);
       }
     }
 
@@ -59,7 +59,7 @@ namespace NARCFileReadingDLL
     {
       if (m_fcFileChanged == null)
         return;
-            m_fcFileChanged((FIMGFrame.FileImageEntryBase) this);
+      m_fcFileChanged(this);
     }
 
     public override void WriteTo(BinaryWriter brwWriter)
@@ -68,7 +68,7 @@ namespace NARCFileReadingDLL
       brwWriter.Write((ushort)m_arrStringTableSections[0].Entries.Length);
       uint num = 0;
       foreach (StringTableSection stringTableSection in m_arrStringTableSections)
-        num += (uint) stringTableSection.Size;
+        num += (uint)stringTableSection.Size;
       brwWriter.Write(num);
       brwWriter.Write(m_unUnknown1);
       brwWriter.Write(m_unUnknown2);

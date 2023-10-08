@@ -13,7 +13,7 @@ namespace NARCFileReadingDLL
   public class FATBFrame : NARCFileFrame
   {
     public const string MAGIC = "FATB";
-    private List<FATBFrame.FileAllocationTableEntry> m_lstfateEntries;
+    private List<FileAllocationTableEntry> m_lstfateEntries;
 
     public FATBFrame(BinaryReader brrReader, int nSize, params object[] args)
     {
@@ -23,16 +23,16 @@ namespace NARCFileReadingDLL
       nSize -= 4;
       if (num < 0 || num * 8 != nSize)
         throw new FormatException();
-            m_lstfateEntries = new List<FATBFrame.FileAllocationTableEntry>();
-      FATBFrame.FileAllocationTableEntry allocationTableEntry1;
-            m_lstfateEntries.Add(allocationTableEntry1 = new FATBFrame.FileAllocationTableEntry(brrReader));
+      m_lstfateEntries = new List<FileAllocationTableEntry>();
+      FileAllocationTableEntry allocationTableEntry1;
+      m_lstfateEntries.Add(allocationTableEntry1 = new FileAllocationTableEntry(brrReader));
       for (int index = num - 1; index > 0; --index)
       {
-        FATBFrame.FileAllocationTableEntry allocationTableEntry2 = new FATBFrame.FileAllocationTableEntry(brrReader);
+        FileAllocationTableEntry allocationTableEntry2 = new FileAllocationTableEntry(brrReader);
         if (allocationTableEntry2.Start < allocationTableEntry1.End)
           throw new FormatException();
-        allocationTableEntry1.Changed += new FATBFrame.FileAllocationTableEntry.FileSizeChanged(allocationTableEntry2.SizeChanged);
-                m_lstfateEntries.Add(allocationTableEntry1 = allocationTableEntry2);
+        allocationTableEntry1.Changed += new FileAllocationTableEntry.FileSizeChanged(allocationTableEntry2.SizeChanged);
+        m_lstfateEntries.Add(allocationTableEntry1 = allocationTableEntry2);
       }
     }
 
@@ -52,7 +52,7 @@ namespace NARCFileReadingDLL
       }
     }
 
-    public FATBFrame.FileAllocationTableEntry[] Entries
+    public FileAllocationTableEntry[] Entries
     {
       get
       {
@@ -71,35 +71,35 @@ namespace NARCFileReadingDLL
     protected override void WriteContentTo(BinaryWriter brwWriter)
     {
       brwWriter.Write(FilesCount);
-      foreach (FATBFrame.FileAllocationTableEntry lstfateEntry in m_lstfateEntries)
+      foreach (FileAllocationTableEntry lstfateEntry in m_lstfateEntries)
         lstfateEntry.WriteTo(brwWriter);
     }
 
     public class FileAllocationTableEntry : INintendoItem
     {
-      private FATBFrame.FileAllocationTableEntry.FileSizeChanged m_fscChanged;
+      private FileSizeChanged m_fscChanged;
       private int m_nStart;
       private int m_nEnd;
 
       public FileAllocationTableEntry(BinaryReader brrReader)
       {
-                m_nStart = brrReader.ReadInt32();
+        m_nStart = brrReader.ReadInt32();
         if (m_nStart < 0 || m_nStart % 4 != 0)
           throw new FormatException();
-                m_nEnd = brrReader.ReadInt32();
+        m_nEnd = brrReader.ReadInt32();
         if (m_nEnd < m_nStart)
           throw new FormatException();
       }
 
-      public event FATBFrame.FileAllocationTableEntry.FileSizeChanged Changed
+      public event FileSizeChanged Changed
       {
         add
         {
-                    m_fscChanged += value;
+          m_fscChanged += value;
         }
         remove
         {
-                    m_fscChanged -= value;
+          m_fscChanged -= value;
         }
       }
 
@@ -124,8 +124,8 @@ namespace NARCFileReadingDLL
           if (value < 0 || value % 4 != 0)
             throw new FormatException();
           int num = value - m_nStart;
-                    m_nStart = value;
-                    End += num;
+          m_nStart = value;
+          End += num;
         }
       }
 
@@ -141,24 +141,24 @@ namespace NARCFileReadingDLL
             return;
           if (value < Start)
             throw new FormatException();
-                    m_nEnd = value;
+          m_nEnd = value;
           if (m_fscChanged == null)
             return;
-                    m_fscChanged(this);
+          m_fscChanged(this);
         }
       }
 
       public void FileChanged(FIMGFrame.FileImageEntryBase fimgeEntry)
       {
-                End = Start + fimgeEntry.Size;
+        End = Start + fimgeEntry.Size;
       }
 
-      public void SizeChanged(FATBFrame.FileAllocationTableEntry fateEntry)
+      public void SizeChanged(FileAllocationTableEntry fateEntry)
       {
         int end = fateEntry.End;
         while (end % 4 != 0)
           ++end;
-                Start = end;
+        Start = end;
       }
 
       public void WriteTo(BinaryWriter brwWriter)
@@ -167,7 +167,7 @@ namespace NARCFileReadingDLL
         brwWriter.Write(End);
       }
 
-      public delegate void FileSizeChanged(FATBFrame.FileAllocationTableEntry fateEntry);
+      public delegate void FileSizeChanged(FileAllocationTableEntry fateEntry);
     }
   }
 }
