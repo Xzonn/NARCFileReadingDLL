@@ -115,7 +115,7 @@ namespace NARCFileReadingDLL
       private VALUE[,] m_arrvValues;
       private byte m_bySpaceWidth;
       private byte m_byWidth;
-      private byte m_byUnknown;
+      private byte m_byTotalWidth;
       private readonly byte m_byMaxWidth;
       private readonly byte m_byMaxHeight;
       private readonly byte m_byBPP;
@@ -124,7 +124,7 @@ namespace NARCFileReadingDLL
       {
         m_bySpaceWidth = 0;
         m_byWidth = 0;
-        m_byUnknown = 0;
+        m_byTotalWidth = 0;
         m_byMaxWidth = byMaxWidth;
         m_byMaxHeight = byMaxHeight;
         m_byBPP = byBPP;
@@ -148,7 +148,7 @@ namespace NARCFileReadingDLL
         m_byWidth = brrReader.ReadByte();
         if (m_byWidth > byMaxWidth)
           throw new FormatException();
-        m_byUnknown = brrReader.ReadByte();
+        m_byTotalWidth = brrReader.ReadByte();
         m_byMaxWidth = byMaxWidth;
         m_byMaxHeight = byMaxHeight;
         m_byBPP = byBPP;
@@ -212,7 +212,7 @@ namespace NARCFileReadingDLL
         }
         set
         {
-          m_byUnknown += (byte)(value - (uint)m_bySpaceWidth);
+          m_byTotalWidth += (byte)(value - (uint)m_bySpaceWidth);
           m_bySpaceWidth = value;
         }
       }
@@ -227,16 +227,32 @@ namespace NARCFileReadingDLL
         {
           if (value > m_byMaxWidth)
             throw new FormatException();
-          m_byUnknown += (byte)(value - (uint)m_byWidth);
+          m_byTotalWidth += (byte)(value - (uint)m_byWidth);
           m_byWidth = value;
         }
       }
 
-      public byte Unknown
+      public byte SpaceAfter
       {
         get
         {
-          return m_byUnknown;
+          return (byte)(m_byTotalWidth - m_bySpaceWidth - m_byWidth);
+        }
+        set
+        {
+          m_byTotalWidth = (byte)(value + m_bySpaceWidth + m_byWidth);
+        }
+      }
+
+      public byte TotalWidth
+      {
+        get
+        {
+          return m_byTotalWidth;
+        }
+        set
+        {
+          m_byTotalWidth = value;
         }
       }
 
@@ -252,7 +268,7 @@ namespace NARCFileReadingDLL
       {
         brwWriter.Write(m_bySpaceWidth);
         brwWriter.Write(m_byWidth);
-        brwWriter.Write(m_byUnknown);
+        brwWriter.Write(m_byTotalWidth);
         int num1 = 0;
         byte num2 = 0;
         for (int index1 = 0; index1 < m_byMaxHeight; ++index1)
